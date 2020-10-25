@@ -4,9 +4,21 @@
    VERSION="v0.1.2 - 25/10/2020"
 #    Copyright (C) 2020 Angel. uGeek
 #    ugeekpodcast@gmail.com
-#    
 #
-#
+#  
+#  __   _____ _ __ ___(_) ___  _ __     ___ ___  _ __ | |_ _ __ ___ | |
+#  \ \ / / _ \ '__/ __| |/ _ \| '_ \   / __/ _ \| '_ \| __| '__/ _ \| |
+#   \ V /  __/ |  \__ \ | (_) | | | | | (_| (_) | | | | |_| | | (_) | |
+#    \_/ \___|_|  |___/_|\___/|_| |_|  \___\___/|_| |_|\__|_|  \___/|_|
+#                                                                      
+#  
+#                 _         _               _     
+#                (_)_ __   | |__   __ _ ___| |__  
+#                | | '_ \  | '_ \ / _` / __| '_ \ 
+#                | | | | | | |_) | (_| \__ \ | | |
+#                |_|_| |_| |_.__/ \__,_|___/_| |_|
+#                                                 
+#                
 #
 #         Crea el archivo de configuración de forma automática mirando la ayuda
 #    
@@ -29,10 +41,6 @@
 #         
 #             */5 * * * * /bin/bash ~/.config/vcb/vcb.sh
 #         
-#
-#
-
-
 
 if [ "$1" = "h" ] ||  [ "$1" = "help" ] ||  [ "$1" = "-help" ] ||  [ "$1" = "-h" ]  
 then
@@ -181,14 +189,11 @@ exit
 fi
 
 
-
-
 if [ "$1" = "e" ]
 then
 nano ~/.config/vcb/config
 exit
 fi
-
 
 
 function version_control_bash(){
@@ -235,14 +240,11 @@ done < ~/.config/vcb$DIRECTORIO/dir.txt
 
 echo ""
 echo ""
-
 }
 
 
-
-
-
 clear
+
 while read RUTA_DIR
 do
     
