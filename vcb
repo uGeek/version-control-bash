@@ -16,7 +16,7 @@
 #         
 #         3) Añade a crontab, cada cuanto tiempo quieres que se produzca el control de versiones. Ejem cada 5 min
 #         
-#             */5 * * * * /bin/bash ~/.config/vcb/vcb.sh
+#             */5 * * * * /bin/bash ~/.config/vcb/vcb
 #         
 
 
@@ -42,7 +42,7 @@ echo ""
 while read LINEA
 do
 
-[ -f $DIRECTORIO/.vcb/"$LINEA" ] && echo -e "  $LINEA \t\t\t  no ha cambiado" || cp $DIRECTORIO/"$LINEA" $DIRECTORIO/.vcb/"$LINEA" 
+[ -f $DIRECTORIO/.vcb/"$LINEA" ] && echo -e "=\t$LINEA" || cp $DIRECTORIO/"$LINEA" $DIRECTORIO/.vcb/"$LINEA" 
 
 done < ~/.config/vcb$DIRECTORIO/dir.txt
 
@@ -57,7 +57,7 @@ COMPARA=$(diff  $DIRECTORIO/$LINEA $DIRECTORIO/.vcb/$LINEA)
 
 if [ "$COMPARA" != "" ]
 then
-    echo -e "$LINEA \t\t ha cambiado"
+    echo -e "El archivo cambiado\t$LINEA"
     mv $DIRECTORIO/.vcb/$LINEA  $DIRECTORIO/.vcb/.$LINEA-$(date +%y%m%d-%H%M)
     cp $DIRECTORIO/$LINEA $DIRECTORIO/.vcb/$LINEA
 fi
@@ -87,7 +87,7 @@ version_control_bash
 echo ""
 
 
-DIRECTORIO="/webdav/emacs"
+DIRECTORIO="/webdav/org/emacs"
 echo "Directorio: $DIRECTORIO"
 echo "-----------------------------------------------------------------------------"
 version_control_bash
