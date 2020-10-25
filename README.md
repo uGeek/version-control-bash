@@ -1,5 +1,4 @@
-# version-control-bash
-
+# version control in bash
 ## Instalación
 ```
 sudo curl -L https://raw.githubusercontent.com/uGeek/version-control-bash/main/vcb \
