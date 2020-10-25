@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #  Version Control Bash
-   VERSION="v0.1.1 - 25/10/2020"
+   VERSION="v0.1.2 - 25/10/2020"
 #    Copyright (C) 2020 Angel. uGeek
 #    ugeekpodcast@gmail.com
 #    
@@ -46,7 +46,7 @@ Modo de empleo: vcb [OPCIONES]
  vcb   vc     ->   Copiar versión en el directorio ~/vcb
  vcb   ls vc  ->   Listar archivos con control de versiones
  vcb   r      ->   Restaurar una versión
- vcb   d      ->   Borrar por fecha
+ vcb   d      ->   Borrar por patrón
  vcb   h      ->   ayuda
 
 vcb $VERSION
@@ -92,7 +92,9 @@ read ARCHIVO
 ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep -i $ARCHIVO | nl
 echo ""
 echo ""
-
+echo -en    "Escribe un patrón para borrar versines antiguas:  "
+read FILE
+rm $DIR/.vcb/.*$FILE*
 exit
 fi
 
@@ -254,15 +256,3 @@ version_control_bash
   
 done < ~/.config/vcb/config # | sed '/^ *$/d'
 
-
-
-
-
-#    clear
-#    echo ""
-#    
-#    DIRECTORIO="/webdav/todo"
-#    echo "Directorio: $DIRECTORIO"
-#    echo "-----------------------------------------------------------------------------"
-#    version_control_bash
-#    echo ""
