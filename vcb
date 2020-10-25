@@ -1,0 +1,95 @@
+#!/bin/bash
+#
+#
+#
+#         
+#         1) Crear una archivo de configuración en
+#         
+#            nano ~/.config/vcb/config
+#            
+#         2) Añade los directorios que deseas tener un control de versiones. Ejem:
+#               
+#            /home/angel/directorio1
+#            /home/angel/directorio2
+#            /home/angel/directorio3
+#            /home/angel/directorio4
+#         
+#         3) Añade a crontab, cada cuanto tiempo quieres que se produzca el control de versiones. Ejem cada 5 min
+#         
+#             */5 * * * * /bin/bash ~/.config/vcb/vcb.sh
+#         
+
+
+
+
+
+
+
+function version_control_bash(){
+
+mkdir -p $DIRECTORIO/.vcb 
+mkdir -p ~/.config/vcb$DIRECTORIO
+
+
+cd $DIRECTORIO      ; ls -p | grep -v /  >  ~/.config/vcb$DIRECTORIO/dir.txt
+cd $DIRECTORIO/.vcb ; ls -p | grep -v /  >  ~/.config/vcb$DIRECTORIO/dir_vcb.txt
+
+
+echo ""
+echo ""
+
+# Si no existe
+while read LINEA
+do
+
+[ -f $DIRECTORIO/.vcb/"$LINEA" ] && echo -e "  $LINEA \t\t\t  no ha cambiado" || cp $DIRECTORIO/"$LINEA" $DIRECTORIO/.vcb/"$LINEA" 
+
+done < ~/.config/vcb$DIRECTORIO/dir.txt
+
+
+echo ""
+echo ""
+
+while read LINEA
+do
+
+COMPARA=$(diff  $DIRECTORIO/$LINEA $DIRECTORIO/.vcb/$LINEA)
+
+if [ "$COMPARA" != "" ]
+then
+    echo -e "$LINEA \t\t ha cambiado"
+    mv $DIRECTORIO/.vcb/$LINEA  $DIRECTORIO/.vcb/.$LINEA-$(date +%y%m%d-%H%M)
+    cp $DIRECTORIO/$LINEA $DIRECTORIO/.vcb/$LINEA
+fi
+done < ~/.config/vcb$DIRECTORIO/dir.txt
+
+echo ""
+echo ""
+
+}
+
+
+
+clear
+echo ""
+
+DIRECTORIO="/webdav/todo"
+echo "Directorio: $DIRECTORIO"
+echo "-----------------------------------------------------------------------------"
+version_control_bash
+echo ""
+
+ 
+DIRECTORIO="/webdav/org"
+echo "Directorio: $DIRECTORIO"
+echo "-----------------------------------------------------------------------------"
+version_control_bash
+echo ""
+
+
+DIRECTORIO="/webdav/emacs"
+echo "Directorio: $DIRECTORIO"
+echo "-----------------------------------------------------------------------------"
+version_control_bash
+echo ""
+
