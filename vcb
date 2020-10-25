@@ -1,7 +1,18 @@
 #!/bin/bash
 #
+#  Version Control Bash
+   VERSION="v0.1.1 - 25/10/2020"
+#    Copyright (C) 2020 Angel. uGeek
+#    ugeekpodcast@gmail.com
+#    
 #
 #
+#
+#         Crea el archivo de configuración de forma automática mirando la ayuda
+#    
+#            vcb h
+#
+#         Modo manual:
 #         
 #         1) Crear una archivo de configuración en
 #         
@@ -16,12 +27,165 @@
 #         
 #         3) Añade a crontab, cada cuanto tiempo quieres que se produzca el control de versiones. Ejem cada 5 min
 #         
-#             */5 * * * * /bin/bash ~/.config/vcb/vcb
+#             */5 * * * * /bin/bash ~/.config/vcb/vcb.sh
 #         
+#
+#
+
+
+
+if [ "$1" = "h" ] ||  [ "$1" = "help" ] ||  [ "$1" = "-help" ] ||  [ "$1" = "-h" ]  
+then
+echo "
+Version Control Bash
+Modo de empleo: vcb [OPCIONES]
+
+ vcb   e      ->   editar archivo de configuración
+ vcb   a      ->   añadir nuevo directorio directorio 
+ vcb   ls c   ->   listar directorios con control de versiones
+ vcb   vc     ->   Copiar versión en el directorio ~/vcb
+ vcb   ls vc  ->   Listar archivos con control de versiones
+ vcb   r      ->   Restaurar una versión
+ vcb   d      ->   Borrar por fecha
+ vcb   h      ->   ayuda
+
+vcb $VERSION
+Copyright (C) 2020 Angel. uGeek
+ugeekpodcast@gmail.com
+"
+exit
+fi
+
+
+
+if [ "$1" = "ls" ] && [ "$2" = "vc" ]
+then
+    echo "Directorios con control de versiones"
+    echo "------------------------------------"
+cat ~/.config/vcb/config | nl
+echo ""
+echo -en "Selecciona en número directorio quiere ver los archivos con control de versiones:"    
+read NUMERO
+echo ""
+DIR=$(cat ~/.config/vcb/config | sed -n "$NUMERO"p)
+echo -en    "Nombre de archivo a filtrar. Escribe . si quieres listar todos los archivos: "
+read ARCHIVO
+ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep -i $ARCHIVO | nl
+echo ""
+exit
+fi
+
+
+
+if [ "$1" = "d" ]
+then
+    echo "Directorios con control de versiones"
+    echo "------------------------------------"
+cat ~/.config/vcb/config | nl
+echo ""
+echo -en "Selecciona en número directorio quiere ver los archivos con control de versiones:"    
+read NUMERO
+echo ""
+DIR=$(cat ~/.config/vcb/config | sed -n "$NUMERO"p)
+echo -en    "Nombre de archivo a filtrar. Escribe . si quieres listar todos los archivos: "
+read ARCHIVO
+ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep -i $ARCHIVO | nl
+echo ""
+echo ""
+
+exit
+fi
+
+
+if [ "$1" = "vc" ]
+then
+    echo "Directorios con control de versiones"
+    echo "------------------------------------"
+cat ~/.config/vcb/config | nl
+echo ""
+echo -en "Selecciona en número directorio quiere ver los archivos con control de versiones:"    
+read NUMERO
+echo ""
+DIR=$(cat ~/.config/vcb/config | sed -n "$NUMERO"p)
+echo -en    "Nombre de archivo a filtrar. Escribe . si quieres listar todos los archivos: "
+read ARCHIVO
+ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep -i $ARCHIVO | nl
+echo ""
+echo -en "Indica el número del archivo que quieres copiar en el directorio ~/vcb: "
+read NUMERO
+ARCHIVO_COPIA=$(ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep $ARCHIVO | sed -n "$NUMERO"p)
+mkdir -p ~/vcb
+cp $DIR/.vcb/.$ARCHIVO_COPIA ~/vcb/$ARCHIVO_COPIA
+echo ""
+echo "Directorio ~/vcb"
+echo "----------------"
+ls -1 ~/vcb
+echo ""
+exit
+fi
+
+
+if [ "$1" = "r" ]
+then
+    echo "Directorios con control de versiones"
+    echo "------------------------------------"
+cat ~/.config/vcb/config | nl
+echo ""
+echo -en "Selecciona en número directorio quiere ver los archivos con control de versiones:"    
+read NUMERO
+echo ""
+DIR=$(cat ~/.config/vcb/config | sed -n "$NUMERO"p)
+echo -en    "Nombre de archivo a filtrar. Escribe . si quieres listar todos los archivos: "
+read ARCHIVO
+ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep -i $ARCHIVO | nl
+echo ""
+echo -en "Indica el número del archivo que quieres copiar en el directorio ~/vcb: "
+read NUMERO
+ARCHIVO_COPIA=$(ls -a $DIR/.vcb | grep '^\.' | tail -n +3 | sed s'|^\.||'g | grep $ARCHIVO | sed -n "$NUMERO"p)
+echo ""
+echo "$(echo $ARCHIVO_COPIA | sed 's/............$//')"
+ARCHIVO_RESTAURAR=$(echo $ARCHIVO_COPIA | sed 's/............$//')
+
+cp $DIR/.vcb/.$ARCHIVO_COPIA $DIR/$ARCHIVO_RESTAURAR
+echo ""
+exit
+fi
+
+
+
+if [ "$1" = "ls" ] && [ "$2" = "c" ]
+then
+cat ~/.config/vcb/config    
+exit
+fi
+
+
+if [ "$1" = "a" ]
+then
+echo -en "Escribe la ruta completa del directorio que quieres tener un control de versiones: "
+read RUTA
+echo $RUTA >> ~/.config/vcb/config
+echo ""
+echo " Añadida la ruta $RUTA"
+echo ""
+echo " Directorios actuales con control de versiones"
+echo " ---------------------------------------------"
+cat ~/.config/vcb/config
+echo ""
+echo "edita el archivo de configuración con:"
+echo "  vbc e"
+echo ""
+exit
+fi
 
 
 
 
+if [ "$1" = "e" ]
+then
+nano ~/.config/vcb/config
+exit
+fi
 
 
 
@@ -29,6 +193,9 @@ function version_control_bash(){
 
 mkdir -p $DIRECTORIO/.vcb 
 mkdir -p ~/.config/vcb$DIRECTORIO
+
+# Eliminar archivos temporales
+rm $DIRECTORIO/*~  $DIRECTORIO/*# $DIRECTORIO/~*  $DIRECTORIO/#* $DIRECTORIO/.#* &> /dev/null
 
 
 cd $DIRECTORIO      ; ls -p | grep -v /  >  ~/.config/vcb$DIRECTORIO/dir.txt
@@ -58,6 +225,7 @@ COMPARA=$(diff  $DIRECTORIO/$LINEA $DIRECTORIO/.vcb/$LINEA)
 if [ "$COMPARA" != "" ]
 then
     echo -e "El archivo cambiado\t$LINEA"
+    # crear nueva versión
     mv $DIRECTORIO/.vcb/$LINEA  $DIRECTORIO/.vcb/.$LINEA-$(date +%y%m%d-%H%M)
     cp $DIRECTORIO/$LINEA $DIRECTORIO/.vcb/$LINEA
 fi
@@ -70,26 +238,31 @@ echo ""
 
 
 
+
+
 clear
-echo ""
-
-DIRECTORIO="/webdav/todo"
-echo "Directorio: $DIRECTORIO"
+while read RUTA_DIR
+do
+    
+echo "Directorio: $RUTA_DIR"
 echo "-----------------------------------------------------------------------------"
-version_control_bash
 echo ""
-
- 
-DIRECTORIO="/webdav/org"
-echo "Directorio: $DIRECTORIO"
-echo "-----------------------------------------------------------------------------"
+    
+DIRECTORIO=$(echo $RUTA_DIR)
+echo $DIRECTORIO
 version_control_bash
-echo ""
+  
+done < ~/.config/vcb/config # | sed '/^ *$/d'
 
 
-DIRECTORIO="/webdav/org/emacs"
-echo "Directorio: $DIRECTORIO"
-echo "-----------------------------------------------------------------------------"
-version_control_bash
-echo ""
 
+
+
+#    clear
+#    echo ""
+#    
+#    DIRECTORIO="/webdav/todo"
+#    echo "Directorio: $DIRECTORIO"
+#    echo "-----------------------------------------------------------------------------"
+#    version_control_bash
+#    echo ""
